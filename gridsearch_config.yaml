@@ -1,0 +1,74 @@
+# =============================================================================
+# AutoCytotox grid-search smoke configuration
+# =============================================================================
+# Run with:
+#   python autocytotox_gridsearch.py --config gridsearch_config.yaml --dry-run
+#
+# The default grid below is intentionally one configuration and matches the
+# validated best workflow. Expand lists deliberately for larger searches.
+# =============================================================================
+
+paths:
+  data_path: example_data
+  output_path: output/autocytotox/gridsearch_smoke
+  manual_excel: null
+
+workflow:
+  effector_cell: NK
+  target_cell: K562
+  identifier_strategy: well_row  # Filename grouping strategy: 'well_row' | 'well_position' | 'stem'.
+  identifier_callable: null      # Advanced custom grouping callable; overrides identifier_strategy when set.
+  min_analysis_cytotox: 5.0
+  max_analysis_cv: 25.0
+  apply_analysis_cutoffs: true
+  run_analysis: false
+  export_csv: false
+
+grid:
+  method:
+    - euclidean
+  percent:
+    - 0.95
+  bw_adjust:
+    - 0.05
+  min_distance:
+    - 30
+  gate2_method:
+    - ratio
+  gate_derivation:
+    - percentile
+  percentile_q:
+    - 0.90
+  k_sigma:
+    - 2.5
+
+channels:
+  fsc_a: FSC-A
+  ssc_a: SSC-A
+  ssc_h: SSC-H
+  x_axis_cytotox: Annexin V V450-A
+  y_axis_cytotox: 7-AAD Y690-A
+  unique_channel: GFP B525-A
+
+gating_defaults:
+  beads_x_cutoff: 2400000
+  subsample: 0.0
+  subsample_seed: 42
+  gate2_mad_mult: 3.0
+  gate2_trim_quantile: 0.02
+
+plotting:
+  enable_all: false
+  plot_beads: false
+  plot_gate_lines: false
+  plot_proximity: false
+  plot_kde_minima: false
+  plot_sc_verification: false
+  plot_2sd: false
+  plot_quadrant: false
+  figure_format: png
+
+runtime:
+  quiet: false
+  n_workers: 1
+  resume: true

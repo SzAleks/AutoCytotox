@@ -1,0 +1,34 @@
+# Autogating Cytotoxicity Analysis - Conda Environment
+# Creates a dedicated environment with all required dependencies
+#
+# Usage:
+#   conda env create -f environment.yml
+#   conda activate autogating_env
+#   jupyter lab examples/simple_example.ipynb   # optional notebook walkthrough
+#
+# FlowCytometryTools Note:
+#   FCT 0.5.1 uses collections.MutableMapping which was removed in Python 3.10.
+#   The codebase includes a monkey-patch (in src/__init__.py) that fixes this,
+#   so Python 3.10 works correctly when running through autocytotox.py / autocytotox_gridsearch.py
+#   or any direct import from `src`.
+
+name: autogating_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy>=1.23,<2.0
+  - pandas>=1.5,<3.0
+  - scipy>=1.9,<2.0
+  - scikit-learn>=1.2,<2.0
+  - matplotlib>=3.6,<4.0
+  - seaborn>=0.12,<1.0
+  - statsmodels>=0.14,<1.0
+  - openpyxl>=3.0
+  - pyyaml>=6.0
+  - ipykernel>=6.0
+  - jupyterlab>=4.0
+  - pip
+  - pip:
+    - FlowCytometryTools>=0.5.0

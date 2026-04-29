@@ -1,0 +1,100 @@
+# =============================================================================
+# AutoCytotox - main configuration template
+# =============================================================================
+# This file is read by:
+#   python autocytotox.py --config config.yaml
+#
+# First-time environment setup from the repository root:
+#   conda env create -f environment.yml
+#   conda activate autogating_env
+#
+# For a normal experiment, copy this file and edit only the fields marked
+# USER EDIT unless you intentionally want to tune the validated workflow:
+#   1. paths.data_path
+#   2. paths.output_path
+#   3. channels.*
+#   4. workflow.identifier_strategy or workflow.identifier_callable if your
+#      filenames do not follow the bundled plate-well naming pattern
+#
+# The remaining defaults are the validated best-workflow settings.
+# =============================================================================
+
+paths:
+  data_path: example_data                      # USER EDIT: folder containing Day <N>_<condition> subfolders with .fcs files.
+  output_path: output/autocytotox/example_run  # USER EDIT: folder where Excel workbooks, plots, and analysis files are written.
+  manual_excel: null                           # Optional: manual analyst workbook path. Required only when workflow.run_analysis is true.
+
+workflow:
+  method: euclidean                            # Proximity-gate method: 'axis' | 'euclidean' | 'density'. Validated default: euclidean.
+  effector_cell: NK                            # Text label used to identify effector-only files and label outputs.
+  target_cell: K562                            # Text label used to identify target-only files and label outputs.
+
+  # Filename grouping controls how files in one Day folder are matched into
+  # effector-only, target-only, and coculture analysis sets.
+  #
+  # Built-in strategies:
+  #   well_row      -> use the row letter from the trailing well token.
+  #                    Example: 05-CC_R_Opt_2_2-E10(6).fcs -> E
+  #                    Use this when each plate row is one experimental group.
+  #   well_position -> use the full trailing well token.
+  #                    Example: 05-CC_R_Opt_2_2-E10(6).fcs -> E10(6)
+  #                    Use this when each physical well should be its own group.
+  #   stem          -> use the full filename without .fcs.
+  #                    Use this only when your own callable or labels do not
+  #                    need plate-well grouping.
+  #
+  # If identifier_callable is set, it overrides identifier_strategy. The
+  # callable must accept List[str] filenames and return List[str] group labels
+  # of the same length.
+  identifier_strategy: well_row
+  identifier_callable: null                    # Advanced: 'module:function' or 'path/to/file.py:function'. Leave null for built-in strategy.
+
+  mwe: false                                   # Minimum-working-example mode: process only a few Day folders for a fast check.
+  mwe_n: 3                                     # Number of Day folders to keep when mwe is true.
+  mwe_seed: 42                                 # Random seed for reproducible MWE folder selection.
+  run_analysis: false                          # Run extended postanalysis. Requires manual_excel and takes longer.
+  export_csv: false                            # Also export postanalysis tables as CSV files.
+  min_analysis_cytotox: 5.0                    # Postanalysis QC: drop groups below this mean cytotoxicity percentage.
+  max_analysis_cv: 25.0                        # Postanalysis QC: drop groups above this CV percentage.
+  apply_analysis_cutoffs: true                 # Set false to keep all postanalysis groups regardless of the two cutoffs above.
+
+channels:
+  # USER EDIT: these must match the channel labels inside your FCS files exactly.
+  # If unsure, inspect one representative .fcs file in FlowJo or another FCS
+  # reader and copy the displayed channel names.
+  fsc_a: FSC-A                                 # Forward scatter area; used for the initial size gate.
+  ssc_a: SSC-A                                 # Side scatter area; used for the initial morphology gate.
+  ssc_h: SSC-H                                 # Side scatter height; used for singlet/morphology cleanup.
+  x_axis_cytotox: Annexin V V450-A             # X axis of the apoptosis/cytotoxicity quadrant plot.
+  y_axis_cytotox: 7-AAD Y690-A                 # Y axis of the apoptosis/cytotoxicity quadrant plot.
+  unique_channel: GFP B525-A                   # Channel used to separate target-associated events from effector events.
+
+gating:
+  percent: 0.95                                # Fraction of reference events kept by the proximity gate. Smaller is stricter.
+  beads_x_cutoff: 2400000                      # Fixed FSC-A threshold, recommended. Set null/0 only if Size Beads were measured and should drive auto-derivation.
+  bw_adjust: 0.05                              # KDE bandwidth multiplier for peak detection. Smaller gives sharper density peaks.
+  min_distance: 30                             # Minimum index distance between KDE peaks. Larger is less sensitive.
+  subsample: 0.0                               # Per-file event subsample fraction. 0 means use all events.
+  subsample_seed: 42                           # Random seed for event subsampling.
+  gate_derivation: percentile                  # Quadrant threshold derivation: 'max' | 'percentile' | 'mean_ksd'.
+  percentile_q: 0.90                           # Quantile used when gate_derivation is 'percentile'.
+  k_sigma: 2.5                                 # Number of SDs used when gate_derivation is 'mean_ksd'.
+  gate2_method: ratio                          # Singlet/morphology gate: 'ratio' | 'knn' | 'linear_band'.
+  gate2_mad_mult: 3.0                          # Width multiplier for ratio/linear_band gate 2 methods.
+  gate2_trim_quantile: 0.02                    # Tail quantile trimmed before fitting gate 2.
+
+plotting:
+  # Plots are off by default for faster first runs. Set enable_all true to
+  # generate every diagnostic plot.
+  enable_all: false                            # Master switch. False forces every plot toggle below off; true forces every toggle on.
+  plot_beads: false                            # Beads clustering scatter plot.
+  plot_gate_lines: false                       # Gate threshold overlays.
+  plot_proximity: false                        # Proximity-gating diagnostic plot.
+  plot_kde_minima: false                       # KDE peak/minimum detection plot.
+  plot_sc_verification: false                  # Single-culture verification plot.
+  plot_2sd: false                              # 2-SD quality plot.
+  plot_quadrant: false                         # Cytotoxicity quadrant plot per sample.
+  figure_format: png                           # Plot file format: 'png' | 'pdf' | 'svg'.
+
+runtime:
+  quiet: false                                 # Set true to suppress verbose progress output.

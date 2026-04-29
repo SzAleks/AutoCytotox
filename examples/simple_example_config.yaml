@@ -1,0 +1,78 @@
+# =============================================================================
+# AutoCytotox simple example configuration
+# =============================================================================
+# This file runs the bundled example_data/ dataset:
+#   python autocytotox.py --config examples/simple_example_config.yaml
+#
+# To analyze your own data, copy this file and edit the USER EDIT fields:
+#   1. paths.data_path
+#   2. paths.output_path
+#   3. channels.*
+#   4. workflow.identifier_strategy or workflow.identifier_callable if your
+#      filenames use a different grouping convention
+# =============================================================================
+
+paths:
+  data_path: example_data                                  # USER EDIT: folder with Day <N>_<condition> subfolders.
+  output_path: output/examples                             # USER EDIT: where this run writes Excel and plots.
+  manual_excel: null                                       # Optional manual workbook path for extended postanalysis.
+
+workflow:
+  method: euclidean                                        # Validated proximity-gate method.
+  effector_cell: NK                                        # Label expected in effector-only filenames.
+  target_cell: K562                                        # Label expected in target-only filenames.
+
+  # How filenames are grouped into matched analysis sets:
+  #   well_row      -> trailing well row only, e.g. ...-D10.fcs -> D.
+  #   well_position -> full trailing well token, e.g. ...-D10.fcs -> D10.
+  #   stem          -> whole filename without .fcs.
+  # Set identifier_callable only for custom filename logic; it overrides
+  # identifier_strategy and must return one group label per input filename.
+  identifier_strategy: well_row
+  identifier_callable: null
+
+  mwe: false                                               # Fast preview mode: process only mwe_n Day folders.
+  mwe_n: 3
+  mwe_seed: 42
+  run_analysis: false                                      # Requires manual_excel.
+  export_csv: false
+  min_analysis_cytotox: 5.0                                # Postanalysis minimum mean cytotoxicity.
+  max_analysis_cv: 25.0                                    # Postanalysis maximum CV percent.
+  apply_analysis_cutoffs: true
+
+channels:
+  # USER EDIT: copy these labels exactly from your FCS files.
+  fsc_a: FSC-A
+  ssc_a: SSC-A
+  ssc_h: SSC-H
+  x_axis_cytotox: Annexin V V450-A
+  y_axis_cytotox: 7-AAD Y690-A
+  unique_channel: GFP B525-A
+
+gating:
+  percent: 0.95                                            # Fraction of reference events kept by proximity gate.
+  beads_x_cutoff: 2400000                                  # Recommended fixed FSC-A cutoff. Use null/0 only for measured Size Beads auto-derivation.
+  bw_adjust: 0.05
+  min_distance: 30
+  subsample: 0.0                                           # 0 means use all events.
+  subsample_seed: 42
+  gate_derivation: percentile
+  percentile_q: 0.90
+  k_sigma: 2.5
+  gate2_method: ratio
+  gate2_mad_mult: 3.0
+  gate2_trim_quantile: 0.02
+
+plotting:
+  enable_all: true                                         # Master switch. When true, every plot toggle below is forced on.
+  plot_beads: true
+  plot_gate_lines: true
+  plot_proximity: true
+  plot_kde_minima: true
+  plot_sc_verification: true
+  plot_2sd: true
+  plot_quadrant: true
+  figure_format: png
+
+runtime:
+  quiet: false

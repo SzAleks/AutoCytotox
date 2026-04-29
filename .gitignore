@@ -1,0 +1,78 @@
+# Output directories
+output/
+plots/
+
+# Experimental folder
+experimental/
+
+# Local data not bundled with the publication branch
+data/
+
+# Excel scratch files
+*.xlsx
+*.xls
+
+# Throwaway / scratch artifacts (anything underscore-prefixed at repo root)
+/_*.py
+/_*.csv
+/_*.log
+/_*.txt
+/_*.json
+/_*.ipynb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.bak
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+*.log
+
+# Test / coverage
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Keep these explicitly
+!example_data/
+!example_data/**
