@@ -1,1 +1,32 @@
-# PLACEHOLDER CITATION FILE
+cff-version: 1.2.0
+message: "If you use AutoCytotox, please cite the software and the associated manuscript."
+title: "AutoCytotox"
+type: software
+authors:
+  - family-names: "Szarzynski"
+    given-names: "Aleksander"
+version: "1.0.0"
+license: "MIT"
+repository-code: "https://github.com/SzAleks/AutoCytotox"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Szarzynski"
+      given-names: "Aleksander"
+    - family-names: "von Werz"
+      given-names: "Valentin"
+    - family-names: "Mattert"
+      given-names: "Gregor"
+    - family-names: "Dammermann"
+      given-names: "Werner"
+    - family-names: "Spadiut"
+      given-names: "Oliver"
+  title: "Automated cytotoxicity assessment of natural killer cells by flow cytometry"
+  journal: "Frontiers in Immunology"
+  volume: 17
+  start: 1868673
+  date-published: "2026-06-29"
+  year: 2026
+  month: 6
+  doi: "10.3389/fimmu.2026.1868673"
+  url: "https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2026.1868673/full"

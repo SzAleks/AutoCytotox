@@ -181,8 +181,7 @@ tables and plots for:
 
 ## Citation And License
 
-Software citation metadata are provided in [CITATION.cff](CITATION.cff). The
-manuscript citation block is a placeholder until final publication metadata are
-available.
+Software citation metadata and the associated manuscript citation are provided
+in [CITATION.cff](CITATION.cff).
 
 This repository is distributed under the MIT license. See [LICENSE](LICENSE).
